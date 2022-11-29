@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import Button from "../Button/Button";
 
 type AddFormType = {
@@ -13,6 +13,7 @@ const AddForm = (props: AddFormType) => {
 
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setTitle(e.currentTarget.value)
+        setError(false)
     }
 
     const addItem = () => {
@@ -24,15 +25,21 @@ const AddForm = (props: AddFormType) => {
             setError(true)
         }
     }
+    const onEnter = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            addItem()
+        }
+    }
 
     return (
         <div>
             <input
                 value={title}
                 onChange={onChangeHandler}
+                onKeyDown={onEnter}
                 placeholder={error ? 'Error!' : 'Enter your text...'}
             />
-            <Button name={props.itemName} onClick={addItem}/>
+            <Button name={props.itemName} onClick={addItem} disabled={error}/>
         </div>
     );
 };

@@ -48,27 +48,27 @@ const Todolist = (props: TodolistType) => {
             <AddForm itemName={'add task'} addItem={(item: string) => props.addTask(props.todoId, item)}/>
 
             <div>
-                props.tasks.length ?
-                {props.tasks.map(t => {
+                {props.tasks.length ?
+                    props.tasks.map(t => {
 
-                    const changeTaskTitle = (newTaskTitle: string) => {
-                        props.changeTaskTitle(props.todoId, t.taskId, newTaskTitle)
-                    }
+                        const changeTaskTitle = (newTaskTitle: string) => {
+                            props.changeTaskTitle(props.todoId, t.taskId, newTaskTitle)
+                        }
 
-                    const changeTaskStatus = (checked: boolean) => {
-                        props.changeTaskStatus(props.todoId, t.taskId, checked)
-                    }
+                        const changeTaskStatus = (checked: boolean) => {
+                            props.changeTaskStatus(props.todoId, t.taskId, checked)
+                        }
 
-                    const deleteTask = () => {
-                        props.deleteTask(props.todoId, t.taskId)
-                    }
+                        const deleteTask = () => {
+                            props.deleteTask(props.todoId, t.taskId)
+                        }
 
-                    return <div key={t.taskId}>
-                        <Checkbox checked={t.isDone} onChange={changeTaskStatus}/>
-                        <EditableSpan text={t.taskTitle} onChange={changeTaskTitle}/>
-                        <Button name={'x'} onClick={deleteTask}/>
-                    </div>
-                })}
+                        return <div key={t.taskId}>
+                            <Checkbox checked={t.isDone} onChange={changeTaskStatus}/>
+                            <EditableSpan text={t.taskTitle} onChange={changeTaskTitle}/>
+                            <Button name={'x'} onClick={deleteTask}/>
+                        </div>
+                    }) : <div>Your list is empty!</div>}
                 {/*Buttons field*/}
                 <div>
                     <Button name={'all'} onClick={setAll}/>

@@ -7,7 +7,7 @@ type ButtonType = {
 }
 
 const Button = (props: ButtonType) => {
-    return <button onClick={props.onClick}>{props.name}</button>
+    return <button onClick={props.onClick} disabled={props.disabled}>{props.name}</button>
 };
 
 export default Button;
