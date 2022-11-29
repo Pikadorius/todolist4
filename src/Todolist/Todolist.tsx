@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, useReducer, useState} from 'react';
 import EditableSpan from "../EditableSpan/EditableSpan";
 import {TaskType} from "../reducers/tasksReducer";
 import {FilterType, SortType} from "../reducers/todolistReducer";
@@ -45,6 +45,11 @@ const Todolist = (props: TodolistType) => {
     // local state for show/hide tasks
     const [toggle, setToggle] = useState(false)
 
+    const outsideChangeTaskStatus=(e:ChangeEvent<HTMLInputElement>, taskId: string)=>{
+        props.changeTaskStatus(props.todoId, taskId, e.currentTarget.checked)
+    }
+
+
     return (
         <div className={s.wrapper}>
             <h3 className={s.todoTitle}>
@@ -80,7 +85,7 @@ const Todolist = (props: TodolistType) => {
                             }
 
                             return <div key={t.taskId}>
-                                <Checkbox checked={t.isDone} onChange={changeTaskStatus}/>
+                                <Checkbox checked={t.isDone} onChange={(e)=>outsideChangeTaskStatus(e,t.taskId)}/>
                                 <EditableSpan text={t.taskTitle} onChange={changeTaskTitle}/>
                                 <IconButton aria-label="delete" size="small" onClick={deleteTask}>
                                     <DeleteIcon sx={{fontSize: 15}}/>
