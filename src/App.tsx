@@ -86,7 +86,7 @@ function App(props: AppType) {
         {/*show/hide todolists*/}
         <Button name={toggle? 'show': 'hide'} onClick={()=>setToggle(!toggle)} isActive={toggle}/>
 
-        {state.todolists.map(t => {
+        {toggle? <></> : state.todolists.map(t => {
 
             const filteredTasks = t.filter === "completed" ? state.tasks[t.todoId].filter(t => t.isDone) :
                 t.filter === 'active' ? state.tasks[t.todoId].filter(t => !t.isDone) : state.tasks[t.todoId]
