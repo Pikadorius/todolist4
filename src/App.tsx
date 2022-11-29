@@ -17,6 +17,9 @@ import {
 } from "./reducers/tasksReducer";
 import Button from "./Button/Button";
 import Todolist from "./Todolist/Todolist";
+import IconButton from '@mui/material/IconButton';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 
 type AppType = {
     store: StoreType;
@@ -84,7 +87,9 @@ function App(props: AppType) {
         {/*form that adds new empty todolist*/}
         <AddForm buttonName={'Add todolist'} addItem={addTodolist} />
         {/*show/hide todolists*/}
-        <Button name={toggle? 'show': 'hide'} onClick={()=>setToggle(!toggle)} isActive={toggle}/>
+        <IconButton aria-label="arrow" size="small" onClick={() => setToggle(!toggle)}>
+            {toggle? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}
+        </IconButton>
 
         {toggle? <></> : state.todolists.map(t => {
 

@@ -1,5 +1,6 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import Button from "../Button/Button";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 type AddFormType = {
     buttonName: string

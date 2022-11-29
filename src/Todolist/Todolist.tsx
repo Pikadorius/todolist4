@@ -3,8 +3,13 @@ import EditableSpan from "../EditableSpan/EditableSpan";
 import {TaskType} from "../reducers/tasksReducer";
 import {FilterType, SortType} from "../reducers/todolistReducer";
 import AddForm from "../AddForm/AddForm";
-import Button from "../Button/Button";
 import Checkbox from "../Checkbox/Checkbox";
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 type TodolistType = {
     todoId: string
@@ -42,8 +47,12 @@ const Todolist = (props: TodolistType) => {
             <h3>
                 <EditableSpan text={props.title}
                               onChange={(newTodoTitle) => props.changeTodoTitle(props.todoId, newTodoTitle)}/>
-                <Button name={'X'} onClick={() => props.removeTodolist(props.todoId)}/>
-                <Button name={toggle ? 'show' : 'hide'} onClick={() => setToggle(!toggle)} isActive={toggle}/>
+                <IconButton aria-label="arrow" size="small" onClick={() => setToggle(!toggle)}>
+                    {toggle? <ArrowDropDownIcon /> : <ArrowDropUpIcon/>}
+                </IconButton>
+                <IconButton aria-label="delete" size="small" onClick={() => props.removeTodolist(props.todoId)}>
+                    <DeleteIcon fontSize={"small"}/>
+                </IconButton>
             </h3>
             {/*form that adds tasks*/}
             {toggle ? <></> : <>
@@ -68,23 +77,33 @@ const Todolist = (props: TodolistType) => {
                             return <div key={t.taskId}>
                                 <Checkbox checked={t.isDone} onChange={changeTaskStatus}/>
                                 <EditableSpan text={t.taskTitle} onChange={changeTaskTitle}/>
-                                <Button name={'x'} onClick={deleteTask}/>
+                                <IconButton aria-label="delete" size="small" onClick={deleteTask}>
+                                    <DeleteIcon sx={{ fontSize: 15}}/>
+                                </IconButton>
                             </div>
                         }) : <div>Your list is empty!</div>}
                     {/*Buttons field*/}
                     <div>
-                        <Button name={'all'} onClick={setFilter('all')} isActive={props.filter === 'all'}/>
-                        <Button name={'active'} onClick={setFilter('active')} isActive={props.filter === 'active'}/>
-                        <Button name={'completed'} onClick={setFilter('completed')}
-                                isActive={props.filter === 'completed'}/>
+                        <ButtonGroup size="small" aria-label="small button group" style={{padding:'20px'}}>
+                            <Button variant={props.filter === 'all' ? "contained" : "outlined"}
+                                    onClick={setFilter('all')}>All</Button>
+                            <Button variant={props.filter === 'active' ? "contained" : "outlined"}
+                                    onClick={setFilter('active')}>Active</Button>
+                            <Button variant={props.filter === 'completed' ? "contained" : "outlined"}
+                                    onClick={setFilter('completed')}>Completed</Button>
+                        </ButtonGroup>
                     </div>
                     <div>
-                        <Button name={'Default'} onClick={setSortFilter("default")}
-                                isActive={props.sortFilter === 'default'}/>
-                        <Button name={'Reverse'} onClick={setSortFilter("reverse")}
-                                isActive={props.sortFilter === 'reverse'}/>
-                        <Button name={'A-Z'} onClick={setSortFilter("a-z")} isActive={props.sortFilter === 'a-z'}/>
-                        <Button name={'Z-A'} onClick={setSortFilter("z-a")} isActive={props.sortFilter === 'z-a'}/>
+                        <ButtonGroup size="small" aria-label="small button group"  style={{padding:'20px'}}>
+                            <Button variant={props.sortFilter === 'default' ? "contained" : "outlined"}
+                                onClick={setSortFilter("default")}>Default</Button>
+                            <Button variant={props.sortFilter === 'reverse' ? "contained" : "outlined"}
+                                onClick={setSortFilter("reverse")}>Reversed</Button>
+                            <Button variant={props.sortFilter === 'a-z' ? "contained" : "outlined"}
+                                onClick={setSortFilter("a-z")}>A-Z</Button>
+                            <Button variant={props.sortFilter === 'z-a' ? "contained" : "outlined"}
+                                onClick={setSortFilter("z-a")}>Z-A</Button>
+                        </ButtonGroup>
                     </div>
                 </div>
             </>}
