@@ -12,7 +12,7 @@ import {
 } from "./reducers/todolistReducer";
 import {
     addNewTaskAC,
-    addTasksForNewTodolistAC, changeTaskStatusAC,
+    addTasksForNewTodolistAC, changeTaskStatusAC, changeTaskTitleAC, deleteTaskAC,
     deleteTasksForTodolistAC,
 } from "./reducers/tasksReducer";
 import Button from "./Button/Button";
@@ -50,8 +50,16 @@ function App(props: AppType) {
         dispatch(addNewTaskAC(todoId, newTaskTitle))
     }
 
+    const deleteTask = (todoId: string, taskId: string) => {
+       dispatch(deleteTaskAC(todoId,taskId))
+    }
+
     const changeTaskStatus = (todoId: string, taskId: string, checked: boolean) => {
         dispatch(changeTaskStatusAC(todoId, taskId, checked))
+    }
+
+    const changeTaskTitle = (todoId: string, taskId: string, newTaskTitle: string) => {
+        dispatch(changeTaskTitleAC(todoId, taskId, newTaskTitle))
     }
 
     return <div>
@@ -76,11 +84,12 @@ function App(props: AppType) {
                 changeTodoTitle={changeTodolistTitle}
                 tasks={filteredTasks}
                 changeTaskStatus={changeTaskStatus}
+                deleteTask={deleteTask}
                 todoId={t.todoId}
                 filter={t.filter}
                 changeFilter={changeTodolistFilter}
                 addTask={addTaskForTodolist}
-                changeTaskTitle={()=>{}}/>
+                changeTaskTitle={changeTaskTitle}/>
         })}
 
 

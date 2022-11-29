@@ -15,8 +15,9 @@ type TodolistType = {
     changeFilter: (todoId: string, filter: FilterType) => void
     tasks: TaskType[]
     changeTaskStatus: (todoId: string, taskId: string, checked: boolean) => void
+    changeTaskTitle: (todoId: string, taskId: string, newTaskTitle: string) => void
     addTask: (todoId: string, newTaskTitle: string) => void
-    changeTaskTitle: (taskId: string, newTaskTitle: string) => void
+    deleteTask: (todoId: string, taskId: string) => void
 }
 
 const Todolist = (props: TodolistType) => {
@@ -46,16 +47,21 @@ const Todolist = (props: TodolistType) => {
                 {props.tasks.map(t => {
 
                     const onTaskTitleChangeHandler = (newTaskTitle: string) => {
-                        props.changeTaskTitle(t.taskId, newTaskTitle)
+                        props.changeTaskTitle(props.todoId, t.taskId, newTaskTitle)
                     }
 
                     const onCheckedHandler = (checked: boolean) => {
                         props.changeTaskStatus(props.todoId, t.taskId, checked)
                     }
 
+                    const onClickDelete = ()=>{
+                        props.deleteTask(props.todoId, t.taskId)
+                    }
+
                     return <div key={t.taskId}>
                         <Checkbox checked={t.isDone} onChange={onCheckedHandler}/>
                         <EditableSpan text={t.taskTitle} onChange={onTaskTitleChangeHandler}/>
+                        <Button name={'x'} onClick={onClickDelete}/>
                     </div>
                 })}
 
