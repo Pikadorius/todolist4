@@ -75,6 +75,11 @@ const Todolist = (props: TodolistType) => {
                     <Button name={'active'} onClick={setActive}/>
                     <Button name={'completed'} onClick={setCompleted}/>
                 </div>
+                <div>
+                    <Button name={'Reverse'} onClick={()=>{}}/>
+                    <Button name={'A-Z'} onClick={()=>{}}/>
+                    <Button name={'Z-A'} onClick={()=>{}}/>
+                </div>
             </div>
         </div>
     );
