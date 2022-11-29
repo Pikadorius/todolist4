@@ -1,21 +1,24 @@
 export type FilterType = 'all' | 'active' | 'completed'
 
+export type SortType = 'reverse' | 'a-z' | 'z-a' | 'default'
 export type TodoListType = {
     todoId: string
     title: string
     filter: FilterType
+    sortFilter: SortType
 }
 
-const initialTodo: TodoListType[] = [{todoId: 'todo1', title: 'What to learn:', filter: 'all'}]
+const initialTodo: TodoListType[] = [{todoId: 'todo1', title: 'What to learn:', filter: 'all', sortFilter: "default"}]
 
-const todolistReducer = (state: TodoListType[] = initialTodo, action: TodolistActionsType) => {
+const todolistReducer = (state: TodoListType[] = initialTodo, action: TodolistActionsType): TodoListType[] => {
     switch (action.type) {
         case "ADD_NEW_TODOLIST": {
             return [
                 {
                     todoId: action.payload.newTodoId,
                     title: action.payload.newTitle,
-                    filter: 'all'
+                    filter: 'all',
+                    sortFilter: 'default'
                 },
                 ...state]
         }
@@ -31,6 +34,9 @@ const todolistReducer = (state: TodoListType[] = initialTodo, action: TodolistAc
         case "CHANGE_TODOLIST_FILTER": {
             return [...state].map(t => t.todoId === action.payload.todoId ? {...t, filter: action.payload.filter} : t)
         }
+        case "CHANGE_TODOLIST_SORT_FILTER": {
+            return [...state].map(t => t.todoId === action.payload.todoId ? {...t, sortFilter: action.payload.sortFilter} : t)
+        }
         default:
             return state;
     }
@@ -40,7 +46,8 @@ export type TodolistActionsType =
     AddNewTodolistACType |
     DeleteTodolistACType |
     ChangeTodolistTitleACType |
-    ChangeTodolistFilterACType
+    ChangeTodolistFilterACType |
+    ChangeTodolistSortFilterACType
 
 type AddNewTodolistACType = ReturnType<typeof addNewTodolistAC>
 export const addNewTodolistAC = (newTodoId: string, newTitle: string) => {
@@ -83,5 +90,16 @@ export const changeTodolistFilterAC = (todoId: string, filter: FilterType) => {
     } as const
 }
 
+
+type ChangeTodolistSortFilterACType = ReturnType<typeof changeTodolistSortFilterAC>
+export const changeTodolistSortFilterAC = (todoId: string, sortFilter: SortType) => {
+    return {
+        type: 'CHANGE_TODOLIST_SORT_FILTER',
+        payload: {
+            todoId,
+            sortFilter
+        }
+    } as const
+}
 
 export default todolistReducer;

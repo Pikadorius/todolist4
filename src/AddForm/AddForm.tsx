@@ -2,7 +2,7 @@ import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import Button from "../Button/Button";
 
 type AddFormType = {
-    itemName: string
+    buttonName: string
     addItem: (item: string) => void
 }
 
@@ -39,7 +39,7 @@ const AddForm = (props: AddFormType) => {
                 onKeyDown={onEnter}
                 placeholder={error ? 'Error!' : 'Enter your text...'}
             />
-            <Button name={props.itemName} onClick={addItem} disabled={error}/>
+            <Button name={props.buttonName} onClick={addItem} disabled={error}/>
         </div>
     );
 };

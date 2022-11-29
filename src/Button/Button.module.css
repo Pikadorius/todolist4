@@ -1,0 +1,18 @@
+.btn {
+    display: inline-block;
+
+}
+
+.btn:disabled {
+    opacity: 0.5;
+}
+
+.btn:active {
+    background-color: green;
+    color: white;
+}
+
+.btnActive {
+    background-color: green;
+    color: white;
+}

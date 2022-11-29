@@ -1,13 +1,13 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './App.css';
 import AddForm from "./AddForm/AddForm";
 import {StoreType} from "./reducers/store";
 import {v1} from "uuid";
 import {
-    addNewTodolistAC, changeTodolistFilterAC,
+    addNewTodolistAC, changeTodolistFilterAC, changeTodolistSortFilterAC,
     changeTodolistTitleAC,
     deleteTodolistAC,
-    FilterType,
+    FilterType, SortType,
     TodoListType
 } from "./reducers/todolistReducer";
 import {
@@ -29,6 +29,7 @@ export type StateType = {
 
 function App(props: AppType) {
 
+    // for easiest access
     const state: StateType = props.store.getState()
     const dispatch = props.store.dispatch
 
@@ -43,12 +44,16 @@ function App(props: AppType) {
         dispatch(deleteTasksForTodolistAC(todoId))
     }
 
-    const changeTodolistTitle = (todoId:string, newTodoTitle: string)=>{
+    const changeTodolistTitle = (todoId: string, newTodoTitle: string) => {
         dispatch(changeTodolistTitleAC(todoId, newTodoTitle))
     }
 
-    const changeTodolistFilter = (todoId: string, filter: FilterType)=>{
+    const changeTodolistFilter = (todoId: string, filter: FilterType) => {
         dispatch(changeTodolistFilterAC(todoId, filter));
+    }
+
+    const changeTodolistSortFilter = (todoId: string, sortFilter: SortType) => {
+        dispatch(changeTodolistSortFilterAC(todoId, sortFilter))
     }
 
     const addTaskForTodolist = (todoId: string, newTaskTitle: string) => {
@@ -56,7 +61,7 @@ function App(props: AppType) {
     }
 
     const deleteTask = (todoId: string, taskId: string) => {
-       dispatch(deleteTaskAC(todoId,taskId))
+        dispatch(deleteTaskAC(todoId, taskId))
     }
 
     const changeTaskStatus = (todoId: string, taskId: string, checked: boolean) => {
@@ -67,6 +72,8 @@ function App(props: AppType) {
         dispatch(changeTaskTitleAC(todoId, taskId, newTaskTitle))
     }
 
+    const [toggle, setToggle]=useState(false)
+
     return <div>
         {/*log all tasks and todolists*/}
         <Button name={"log"} onClick={() => {
@@ -75,19 +82,29 @@ function App(props: AppType) {
         }}/>
 
         {/*form that adds new empty todolist*/}
-        <AddForm itemName={'add todolist'} addItem={addTodolist}/>
+        <AddForm buttonName={'Add todolist'} addItem={addTodolist} />
+        {/*show/hide todolists*/}
+        <Button name={toggle? 'show': 'hide'} onClick={()=>setToggle(!toggle)} isActive={toggle}/>
 
         {state.todolists.map(t => {
 
-            const filteredTasks = t.filter==="completed"? state.tasks[t.todoId].filter(t=>t.isDone) :
-                t.filter==='active'? state.tasks[t.todoId].filter(t=>!t.isDone): state.tasks[t.todoId]
+            const filteredTasks = t.filter === "completed" ? state.tasks[t.todoId].filter(t => t.isDone) :
+                t.filter === 'active' ? state.tasks[t.todoId].filter(t => !t.isDone) : state.tasks[t.todoId]
+
+            const sortedTasks =
+                t.sortFilter === 'reverse' ? [...filteredTasks].reverse() :
+                    t.sortFilter === 'a-z' ? [...filteredTasks].sort((a, b) => a.taskTitle.toLowerCase().localeCompare(b.taskTitle.toLowerCase())) :
+                        t.sortFilter === 'z-a' ? [...filteredTasks].sort((a, b) => b.taskTitle.toLowerCase().localeCompare(a.taskTitle.toLowerCase())) :
+                            filteredTasks
 
             return <Todolist
+                sortFilter={t.sortFilter}
+                changeSortFilter={changeTodolistSortFilter}
                 key={t.todoId}
                 removeTodolist={removeTodolist}
                 title={t.title}
                 changeTodoTitle={changeTodolistTitle}
-                tasks={filteredTasks}
+                tasks={sortedTasks}
                 changeTaskStatus={changeTaskStatus}
                 deleteTask={deleteTask}
                 todoId={t.todoId}

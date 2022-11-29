@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import EditableSpan from "../EditableSpan/EditableSpan";
 import {TaskType} from "../reducers/tasksReducer";
-import {FilterType} from "../reducers/todolistReducer";
+import {FilterType, SortType} from "../reducers/todolistReducer";
 import AddForm from "../AddForm/AddForm";
 import Button from "../Button/Button";
 import Checkbox from "../Checkbox/Checkbox";
@@ -15,6 +15,8 @@ type TodolistType = {
     removeTodolist: (todoId: string) => void
     // todolist filter
     filter: FilterType
+    sortFilter: SortType
+    changeSortFilter: (todoId: string, sortFilter: SortType) => void
     changeFilter: (todoId: string, filter: FilterType) => void
     // props for tasks
     addTask: (todoId: string, newTaskTitle: string) => void
@@ -26,16 +28,14 @@ type TodolistType = {
 
 const Todolist = (props: TodolistType) => {
     // callbacks for buttons
-    const setAll = () => {
-        return props.changeFilter(props.todoId, 'all')
+    const setFilter = (filter: FilterType) => {
+        return () => props.changeFilter(props.todoId, filter)
     }
-    const setActive = () => {
-        return props.changeFilter(props.todoId, 'active')
+    const setSortFilter = (sortFilter: SortType) => {
+        return () => props.changeSortFilter(props.todoId, sortFilter)
     }
-    const setCompleted = () => {
-        return props.changeFilter(props.todoId, 'completed')
-    }
-
+    // local state for show/hide tasks
+    const [toggle, setToggle] = useState(false)
 
     return (
         <div>
@@ -43,44 +43,51 @@ const Todolist = (props: TodolistType) => {
                 <EditableSpan text={props.title}
                               onChange={(newTodoTitle) => props.changeTodoTitle(props.todoId, newTodoTitle)}/>
                 <Button name={'X'} onClick={() => props.removeTodolist(props.todoId)}/>
+                <Button name={toggle ? 'show' : 'hide'} onClick={() => setToggle(!toggle)} isActive={toggle}/>
             </h3>
             {/*form that adds tasks*/}
-            <AddForm itemName={'add task'} addItem={(item: string) => props.addTask(props.todoId, item)}/>
+            {toggle ? <></> : <>
+                <AddForm buttonName={'Add task'} addItem={(item: string) => props.addTask(props.todoId, item)}/>
 
-            <div>
-                {props.tasks.length ?
-                    props.tasks.map(t => {
-
-                        const changeTaskTitle = (newTaskTitle: string) => {
-                            props.changeTaskTitle(props.todoId, t.taskId, newTaskTitle)
-                        }
-
-                        const changeTaskStatus = (checked: boolean) => {
-                            props.changeTaskStatus(props.todoId, t.taskId, checked)
-                        }
-
-                        const deleteTask = () => {
-                            props.deleteTask(props.todoId, t.taskId)
-                        }
-
-                        return <div key={t.taskId}>
-                            <Checkbox checked={t.isDone} onChange={changeTaskStatus}/>
-                            <EditableSpan text={t.taskTitle} onChange={changeTaskTitle}/>
-                            <Button name={'x'} onClick={deleteTask}/>
-                        </div>
-                    }) : <div>Your list is empty!</div>}
-                {/*Buttons field*/}
                 <div>
-                    <Button name={'all'} onClick={setAll}/>
-                    <Button name={'active'} onClick={setActive}/>
-                    <Button name={'completed'} onClick={setCompleted}/>
+                    {props.tasks.length ?
+                        props.tasks.map(t => {
+
+                            const changeTaskTitle = (newTaskTitle: string) => {
+                                props.changeTaskTitle(props.todoId, t.taskId, newTaskTitle)
+                            }
+
+                            const changeTaskStatus = (checked: boolean) => {
+                                props.changeTaskStatus(props.todoId, t.taskId, checked)
+                            }
+
+                            const deleteTask = () => {
+                                props.deleteTask(props.todoId, t.taskId)
+                            }
+
+                            return <div key={t.taskId}>
+                                <Checkbox checked={t.isDone} onChange={changeTaskStatus}/>
+                                <EditableSpan text={t.taskTitle} onChange={changeTaskTitle}/>
+                                <Button name={'x'} onClick={deleteTask}/>
+                            </div>
+                        }) : <div>Your list is empty!</div>}
+                    {/*Buttons field*/}
+                    <div>
+                        <Button name={'all'} onClick={setFilter('all')} isActive={props.filter === 'all'}/>
+                        <Button name={'active'} onClick={setFilter('active')} isActive={props.filter === 'active'}/>
+                        <Button name={'completed'} onClick={setFilter('completed')}
+                                isActive={props.filter === 'completed'}/>
+                    </div>
+                    <div>
+                        <Button name={'Default'} onClick={setSortFilter("default")}
+                                isActive={props.sortFilter === 'default'}/>
+                        <Button name={'Reverse'} onClick={setSortFilter("reverse")}
+                                isActive={props.sortFilter === 'reverse'}/>
+                        <Button name={'A-Z'} onClick={setSortFilter("a-z")} isActive={props.sortFilter === 'a-z'}/>
+                        <Button name={'Z-A'} onClick={setSortFilter("z-a")} isActive={props.sortFilter === 'z-a'}/>
+                    </div>
                 </div>
-                <div>
-                    <Button name={'Reverse'} onClick={()=>{}}/>
-                    <Button name={'A-Z'} onClick={()=>{}}/>
-                    <Button name={'Z-A'} onClick={()=>{}}/>
-                </div>
-            </div>
+            </>}
         </div>
     );
 };
