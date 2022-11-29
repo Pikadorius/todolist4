@@ -1,6 +1,7 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
-import Button from "../Button/Button";
-import DeleteIcon from '@mui/icons-material/Delete';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
+import TextField from '@mui/material/TextField';
 
 type AddFormType = {
     buttonName: string
@@ -34,13 +35,25 @@ const AddForm = (props: AddFormType) => {
 
     return (
         <div>
-            <input
+            {/*<input*/}
+            {/*    value={title}*/}
+            {/*    onChange={onChangeHandler}*/}
+            {/*    onKeyDown={onEnter}*/}
+            {/*    placeholder={error ? 'Error!' : 'Enter your text...'}*/}
+            {/*/>*/}
+
+            <TextField
+                label={error ? 'Error!' : 'Enter your text'}
+                variant="outlined"
                 value={title}
                 onChange={onChangeHandler}
                 onKeyDown={onEnter}
-                placeholder={error ? 'Error!' : 'Enter your text...'}
+                error={error}
+                style={{display: 'inline-block', maxWidth: '180px',marginBottom: '10px'}}
+                size={'small'}
             />
-            <Button name={props.buttonName} onClick={addItem} disabled={error}/>
+            <Button style={{maxHeight: '40px', minHeight: '40px'}} variant={'outlined'} onClick={addItem} disabled={error}
+                    endIcon={<AddIcon/>}>{props.buttonName}</Button>
         </div>
     );
 };
