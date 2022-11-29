@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import AddForm from "./AddForm/AddForm";
-import {StateType, StoreType} from "./reducers/store";
+import {StoreType} from "./reducers/store";
 import {v1} from "uuid";
 import {
     addNewTodolistAC, changeTodolistFilterAC,
@@ -13,13 +13,18 @@ import {
 import {
     addNewTaskAC,
     addTasksForNewTodolistAC, changeTaskStatusAC, changeTaskTitleAC, deleteTaskAC,
-    deleteTasksForTodolistAC,
+    deleteTasksForTodolistAC, TasksStateType,
 } from "./reducers/tasksReducer";
 import Button from "./Button/Button";
-import Todolist from "./Todolist";
+import Todolist from "./Todolist/Todolist";
 
 type AppType = {
     store: StoreType;
+}
+
+export type StateType = {
+    todolists: TodoListType[]
+    tasks: TasksStateType
 }
 
 function App(props: AppType) {
@@ -65,8 +70,8 @@ function App(props: AppType) {
     return <div>
         {/*log all tasks and todolists*/}
         <Button name={"log"} onClick={() => {
-            console.log(props.store.getState().tasks)
-            console.log(props.store.getState().todolists)
+            console.log(state.tasks)
+            console.log(state.todolists)
         }}/>
 
         {/*form that adds new empty todolist*/}
