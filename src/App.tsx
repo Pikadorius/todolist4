@@ -36,6 +36,7 @@ function App(props: AppType) {
     const state: StateType = props.store.getState()
     const dispatch = props.store.dispatch
 
+
     const addTodolist = (newTitle: string) => {
         let newTodoId = v1()
         dispatch(addNewTodolistAC(newTodoId, newTitle))
@@ -75,7 +76,7 @@ function App(props: AppType) {
         dispatch(changeTaskTitleAC(todoId, taskId, newTaskTitle))
     }
 
-    const [toggle, setToggle]=useState(false)
+    const [toggle, setToggle] = useState(false)
 
     return <div>
         {/*log all tasks and todolists*/}
@@ -85,13 +86,13 @@ function App(props: AppType) {
         }}/>
 
         {/*form that adds new empty todolist*/}
-        <AddForm buttonName={'Add todolist'} addItem={addTodolist} />
+        <AddForm buttonName={'Add todolist'} addItem={addTodolist}/>
         {/*show/hide todolists*/}
         <IconButton aria-label="arrow" size="small" onClick={() => setToggle(!toggle)}>
-            {toggle? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}
+            {toggle ? <ArrowDropDownIcon/> : <ArrowDropUpIcon/>}
         </IconButton>
 
-        {toggle? <></> : state.todolists.map(t => {
+        {toggle ? <></> : state.todolists.map(t => {
 
             const filteredTasks = t.filter === "completed" ? state.tasks[t.todoId].filter(t => t.isDone) :
                 t.filter === 'active' ? state.tasks[t.todoId].filter(t => !t.isDone) : state.tasks[t.todoId]
